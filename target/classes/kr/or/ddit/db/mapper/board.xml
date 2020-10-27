@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+ <insert id="createBoard" parameterType="String">
+  	insert into boardmenu values(
+  	 BOARDMENU_SEQ.NEXTVAL, #{board_name}, 'Y')
+  </insert>
+  
+  <select id="boardMenuList" resultType="BoardMenuVo">
+  	select * from boardmenu where board_status = 'Y'
+  </select>
+  
+  <select id="boardMenuAllList" resultType="BoardMenuVo">
+  	select * from boardmenu 
+  </select>
+  
+  <update id="updateboardMenu" parameterType="BoardMenuVo">
+  	update boardmenu set board_status=#{board_status}
+	where boardmenu_seq=#{boardmenu_seq}
+  </update>
+  
+  <select id="pagecount" resultType="BoardVo" parameterType="PageVo">
+  	SELECT *
+	FROM
+	    (SELECT ROWNUM rn, a.*
+	    FROM
+	        (select	 boardmenu_seq,
+      		 level boardlevel,
+     		 board_seq,
+      		 board_parent_seq,
+       	     case when level = 1 then '' else lpad('-', level*4, '-') end ||
+      		 case when board_status = 'N' then '**삭제된 게시글입니다.**'  else board_title end board_title,
+    	     user_id,
+      		 board_status,
+     		 board_create_date
+				from(select * from board where boardmenu_seq = #{boardmenu_seq})
+			start with  board_parent_seq is null
+			connect by prior board_seq = board_parent_seq 
+			order siblings by board_seq) a)
+		WHERE rn BETWEEN  (#{page}-1) * #{pageSize}+1   AND #{page} * #{pageSize}
+
+  </select>
+  
+  <select id="selectBoardTotalCnt" resultType="int" parameterType="int">
+  	SELECT COUNT(*) FROM board where boardmenu_seq=#{boardmenu_seq}
+  </select>
+  
+  <insert id="insertBoard" parameterType="BoardVo">
+  <selectKey keyProperty="board_seq" resultType="int">
+  	select board_seq.CURRVAL from dual 
+  </selectKey>
+	  	insert into board (board_title, board_content, board_seq,
+	  	board_status,board_create_date,boardmenu_seq,user_id
+		)values(
+	  	#{board_title}, 
+	  	#{board_content},
+	  	board_seq.nextval,
+	  	'Y',
+	  	sysdate,
+	  	#{boardmenu_seq},
+	  	#{user_id})
+  </insert>
+  
+  <insert id="insertBoardDown" parameterType="BoardVo">
+	  	insert into board (board_title, board_content, board_seq,
+	  	board_status,board_create_date,boardmenu_seq,user_id,board_parent_seq
+		)values(
+	  	#{board_title}, 
+	  	#{board_content},
+	  	board_seq.nextval,
+	  	'Y',
+	  	sysdate,
+	  	#{boardmenu_seq},
+	  	#{user_id},
+	  	#{board_seq}
+	  	)
+  </insert>
+  
+  <insert id="insertFile" parameterType="FileVo">
+  	insert into files values(
+  	#{file_name}, 
+  	#{file_realname},
+  	#{board_seq},
+  	file_seq.NEXTVAL,
+  	'Y')
+  	
+  </insert>
+  
+  <select id="getBoard" parameterType="int" resultType="BoardVo">
+  	select * from board where board_seq=#{board_seq}
+  </select>
+  
+  <select id="getFile" parameterType="int" resultType="FileVo">
+  	select * from files where board_seq=#{board_seq}
+  </select>
+  
+  <select id="getFileDown" parameterType="int" resultType="FileVo">
+  	select * from files where file_seq=#{file_seq}
+  </select>
+  
+  <select id="showFile" parameterType="int" resultType="FileVo">
+  	select * from files where board_seq=#{board_seq}
+  </select>
+  
+  <update id="updateBoard" parameterType="BoardVo">
+  	update board
+  		set 
+  		board_title = #{board_title},
+  		board_content = #{board_content} where board_seq = #{board_seq}
+  
+  </update>
+  
+  <update id="deleteBoard" parameterType="int">
+  	update board
+  		set 
+  		board_status = 'N'
+  		where board_seq = #{board_seq}
+  </update>
+  
+  
+
+
+
+</mapper>
