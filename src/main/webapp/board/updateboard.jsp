@@ -25,6 +25,42 @@ $(document).ready(function(){
 		$('#frm').submit();
 
 	})
+	
+	$('#fileBtn1').on('click', function(){
+		a = ($(this)).attr('value');
+		$(this).hide();
+		$('#fileshow1').show();
+		$('#file_seq1').val(a);
+		
+	})
+	$('#fileBtn2').on('click', function(){
+		a = ($(this)).attr('value');
+		$(this).hide();
+		$('#fileshow2').show();
+		$('#file_seq2').val(a);
+
+	})
+	$('#fileBtn3').on('click', function(){
+		a = ($(this)).attr('value');
+		$(this).hide();
+		$('#fileshow3').show();
+		$('#file_seq3').val(a);
+
+	})
+	$('#fileBtn4').on('click', function(){
+		a = ($(this)).attr('value');
+		$(this).hide();
+		$('#fileshow4').show();
+		$('#file_seq4').val(a);
+
+	})
+	$('#fileBtn5').on('click', function(){
+		a = ($(this)).attr('value');
+		$(this).hide();
+		$('#fileshow5').show();
+		$('#file_seq5').val(a);
+	})
+
 });
 
 </script>
@@ -60,49 +96,39 @@ $(document).ready(function(){
                   </div>
                </div>
                
-               <div class="form-group">
-                  <label for="file" class="col-sm-2 control-label">첨부파일</label>
-                  <div class="col-sm-10">
-						<img src="${cp}/profileImg?board_seq=${boardVo.board_seq}"><br>
-					</div>
-               </div>
-               
                
                
                <input type="hidden" name="boardmenu_seq" value="${boardVo.boardmenu_seq}">
                <input type="hidden" name="user_id" value="${S_MEMBER.user_id}">
                <input type="hidden" name="board_seq" value="${boardVo.board_seq}">
                <textarea id="summernote" name="board_content">${boardVo.board_content}</textarea>
+               
+               
+               
+                  
+             <c:forEach items="${filelist}" var="file" varStatus="status">
                <div class="form-group">
                   <label for="file" class="col-sm-2 control-label">첨부파일</label>
                   <div class="col-sm-10">
-                     <input type="file" name="file_realname"/>
-               		</div>
-                 </div>
-               <div class="form-group">
+                  		<input type="file" id="fileshow${status.count }" name="file_realname${status.count }" style="display: none"/>
+						<button id="fileBtn${status.count }" type="button" class="btn btn-default" value="${file.file_seq}">${file.file_realname} x</button>
+					</div>
+               </div>
+			</c:forEach>
+			
+			<c:forEach var="i" begin="${fileCount + 1}" end="5" step="1">
+				<div class="form-group">
                   <label for="file" class="col-sm-2 control-label">첨부파일</label>
                   <div class="col-sm-10">
-                     <input type="file" name="file_realname"/>
-               		</div>
-                 </div>
-               <div class="form-group">
-                  <label for="file" class="col-sm-2 control-label">첨부파일</label>
-                  <div class="col-sm-10">
-                     <input type="file" name="file_realname"/>
-               		</div>
-                 </div>
-               <div class="form-group">
-                  <label for="file" class="col-sm-2 control-label">첨부파일</label>
-                  <div class="col-sm-10">
-                     <input type="file" name="file_realname"/>
-               		</div>
-                 </div>
-               <div class="form-group">
-                  <label for="file" class="col-sm-2 control-label">첨부파일</label>
-                  <div class="col-sm-10">
-                     <input type="file" name="file_realname"/>
-               		</div>
-                 </div>
+                  		<input type="file" name="file_realname${i}"/>
+					</div>
+               </div>
+			</c:forEach>
+						<input type="hidden" id="file_seq1" name="file_seq1" value="">
+						<input type="hidden" id="file_seq2" name="file_seq2" value="">
+						<input type="hidden" id="file_seq3" name="file_seq3" value="">
+						<input type="hidden" id="file_seq4" name="file_seq4" value="">
+						<input type="hidden" id="file_seq5" name="file_seq5" value="">
                
                <div class="form-group">
                   <div class="col-sm-offset-2 col-sm-10">

@@ -38,7 +38,7 @@
 				from(select * from board where boardmenu_seq = #{boardmenu_seq})
 			start with  board_parent_seq is null
 			connect by prior board_seq = board_parent_seq 
-			order siblings by board_seq) a)
+			order siblings by board_create_date desc) a)
 		WHERE rn BETWEEN  (#{page}-1) * #{pageSize}+1   AND #{page} * #{pageSize}
 
   </select>
@@ -64,6 +64,10 @@
   </insert>
   
   <insert id="insertBoardDown" parameterType="BoardVo">
+  
+   <selectKey keyProperty="board_seq" resultType="int">
+  	select board_seq.CURRVAL from dual 
+  </selectKey>
 	  	insert into board (board_title, board_content, board_seq,
 	  	board_status,board_create_date,boardmenu_seq,user_id,board_parent_seq
 		)values(
@@ -83,8 +87,7 @@
   	#{file_name}, 
   	#{file_realname},
   	#{board_seq},
-  	file_seq.NEXTVAL,
-  	'Y')
+  	file_seq.NEXTVAL)
   	
   </insert>
   
@@ -118,6 +121,10 @@
   		board_status = 'N'
   		where board_seq = #{board_seq}
   </update>
+  
+  <delete id="deleteFile" parameterType="int">
+  	delete from files where file_seq = #{file_seq}
+  </delete>
   
   
 

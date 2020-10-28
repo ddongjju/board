@@ -38,6 +38,8 @@ public interface BoardServiceI {
 	FileVo getFileDown(int file_seq);
 
 	int deleteBoard(int board_seq);
+
+	int deleteFile(int file_seq);
 	
 	
 }

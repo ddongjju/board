@@ -41,4 +41,6 @@ public interface BoardDaoI {
 
 	int deleteBoard(int board_seq);
 	
+	int deleteFile(int file_seq);
+	
 }

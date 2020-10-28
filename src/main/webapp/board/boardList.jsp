@@ -21,11 +21,17 @@
 <%@ include file="/layout/commonLib.jsp" %>
 <script>
 $(document).ready(function(){
-	$('#boardList tr').on('click',function(){
-		var board_seq =$(this).data("board_seq");
-		console.log(board_seq)
-
-		document.location="/board/board?board_seq="+board_seq;
+	$('#boardList tr').on('click',function(){	
+		var board_status =$(this).data("board_status");
+		if(board_status=='N'){
+			
+		}
+		else{
+			var board_seq =$(this).data("board_seq");
+			console.log(board_seq)
+	
+			document.location="/board/board?board_seq="+board_seq;
+		}
 	})
 })
 
@@ -57,13 +63,12 @@ $(document).ready(function(){
 								</tr>
 								<tbody id="boardList">
 									<c:forEach items="${boardList}" var="board">
-										<tr data-board_seq="${board.board_seq }">
+										<tr data-board_seq="${board.board_seq }" data-board_status="${board.board_status }"> 
 											<td>${board.board_seq }</td>
 											<td>${board.board_title}</td>
 											<td>${board.user_id}</td>
 											<!-- format : yyyy-MM-dd -->
 											<td><fmt:formatDate value="${board.board_create_date}" pattern="yyyy-MM-dd"/></td>
-	<%-- 										<td>${date}</td> --%>
 										</tr>
 									</c:forEach>
 								</tbody>
@@ -73,16 +78,39 @@ $(document).ready(function(){
 						<a class="btn btn-default pull-right" href="${cp}/boardInsert?boardmenu_seq=${boardmenu_seq}">게시글 등록</a>
 						<div class="text-center">
 							<ul class="pagination">
-								<c:forEach var="i" begin="1" end="${pages }">
-									<c:choose>
-										<c:when test="${i == page}">
-											<li class="active"><span>${i}</span></li>
-										</c:when>
-										<c:otherwise>
-											<li><a href="${pageContext.request.contextPath }/boardList?page=${i}&boardmenu_seq=${boardmenu_seq}">${i}</a></li>
-										</c:otherwise>
-									</c:choose>
-								</c:forEach>
+							<c:choose>
+								<c:when test="${page == 0 }"></c:when>
+								<c:when test="${page == 1 }">
+									  <li class="active"><a href="#"><<</a></li>
+									  <li class="active"><a href="#"><</a></li>
+								</c:when>
+								<c:otherwise>
+									  <li><a href="${pageContext.request.contextPath }/boardList?page=1&boardmenu_seq=${boardmenu_seq}"><<</a></li>
+									  <li><a href="${pageContext.request.contextPath }/boardList?page=${page-1 }&boardmenu_seq=${boardmenu_seq}"><</a></li>
+								</c:otherwise>
+							</c:choose>
+							
+									<c:forEach var="i" begin="1" end="${pages }">
+										<c:choose>
+											<c:when test="${i == page}">
+												<li class="active"><span>${i}</span></li>
+											</c:when>
+											<c:otherwise>
+												<li><a href="${pageContext.request.contextPath }/boardList?page=${i}&boardmenu_seq=${boardmenu_seq}">${i}</a></li>
+											</c:otherwise>
+										</c:choose>
+									</c:forEach>
+									
+							<c:choose>
+								<c:when test="${page == pages }">
+									  <li class="active"><a href="#">></a></li>
+									  <li class="active"><a href="#">>></a></li>
+								</c:when>
+								<c:otherwise>
+									  <li><a href="${pageContext.request.contextPath }/boardList?page=${page+1 }&boardmenu_seq=${boardmenu_seq}">></a></li>
+									  <li><a href="${pageContext.request.contextPath }/boardList?page=${pages }&boardmenu_seq=${boardmenu_seq}">>></a></li>
+								</c:otherwise>
+							</c:choose> 
 							</ul>
 						</div>
 					</div>

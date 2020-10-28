@@ -167,7 +167,7 @@ public class BoardDao implements BoardDaoI{
 			sqlSession.rollback();
 		}
 		sqlSession.close();
-		return cnt;
+		return boardVo.getBoard_seq();
 	}
 
 	@Override
@@ -196,6 +196,24 @@ public class BoardDao implements BoardDaoI{
 		int cnt = 0;
 		try {
 			cnt = sqlSession.update("board.deleteBoard", board_seq);
+		}catch (Exception e) {
+		}
+		if(cnt == 1) {
+			sqlSession.commit();
+		}else {
+			sqlSession.rollback();
+		}
+		sqlSession.close();
+	
+		return cnt;
+	}
+
+	@Override
+	public int deleteFile(int file_seq) {
+		SqlSession sqlSession = MybatisUtil.getSqlSession();
+		int cnt = 0;
+		try {
+			cnt = sqlSession.delete("board.deleteFile", file_seq);
 		}catch (Exception e) {
 		}
 		if(cnt == 1) {

@@ -4,16 +4,30 @@ import java.util.Date;
 
 public class ReplyVo {
 	
-	private String reply_seq;
+	private int reply_seq;
 	private String reply_content;
 	private String reply_status;
 	private Date reply_create_date;
-	private String board_seq;
+	private int board_seq;
 	private String user_id;
-	public String getReply_seq() {
+	
+	public ReplyVo() {
+		
+	}
+	
+	public ReplyVo(int reply_seq, String reply_content, String reply_status, Date reply_create_date, int board_seq,
+			String user_id) {
+		this.reply_seq = reply_seq;
+		this.reply_content = reply_content;
+		this.reply_status = reply_status;
+		this.reply_create_date = reply_create_date;
+		this.board_seq = board_seq;
+		this.user_id = user_id;
+	}
+	public int getReply_seq() {
 		return reply_seq;
 	}
-	public void setReply_seq(String reply_seq) {
+	public void setReply_seq(int reply_seq) {
 		this.reply_seq = reply_seq;
 	}
 	public String getReply_content() {
@@ -34,10 +48,10 @@ public class ReplyVo {
 	public void setReply_create_date(Date reply_create_date) {
 		this.reply_create_date = reply_create_date;
 	}
-	public String getBoard_seq() {
+	public int getBoard_seq() {
 		return board_seq;
 	}
-	public void setBoard_seq(String board_seq) {
+	public void setBoard_seq(int board_seq) {
 		this.board_seq = board_seq;
 	}
 	public String getUser_id() {

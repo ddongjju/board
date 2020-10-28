@@ -70,29 +70,35 @@ public class BoardDownInsertServlet extends HttpServlet {
 		boardVo.setBoard_seq(Integer.parseInt(board_seq));
 		int cnt = boardService.insertBoardDown(boardVo);
 		
-//		Part file = request.getPart("file_realname");
-//
-//		String realFilename = FileUploadUtil.getFilename(file.getHeader("Content-Disposition"));
-//		String ext = FileUploadUtil.getExtension(realFilename);
-//		String fileName = UUID.randomUUID().toString();
-//		String filePath = "";
-//		if (file.getSize() > 0) {
-//			filePath = "D:\\profile\\" + fileName + "." + ext;
-//			file .write(filePath);
-//		}
-//
-//		logger.debug("filePath : {}",filePath);
-//		logger.debug("fileName : {}",fileName);
-//		logger.debug("realFilename : {}",realFilename);
-//		
-//		
-//		FileVo fileVo = new FileVo();
-//		
-//		logger.debug("글번호 : {}", cnt);
-//		fileVo.setFile_name(filePath);
-//		fileVo.setFile_realname(realFilename);
-//		fileVo.setBoard_seq(cnt);
-//		boardService.insertFile(fileVo);
+		
+		for(int i = 1; i<6; i++) {
+			Part file = request.getPart("file_realname" + i);
+			
+			String realFilename = FileUploadUtil.getFilename(file.getHeader("Content-Disposition"));
+			String ext = FileUploadUtil.getExtension(realFilename);
+			String fileName = UUID.randomUUID().toString();
+			String filePath = "";
+			
+			
+			if (file.getSize() > 0) {
+				filePath = "D:\\profile\\" + fileName + "." + ext;
+				file .write(filePath);
+				
+				FileVo fileVo = new FileVo();
+				
+				logger.debug("성공성공 : {} ",cnt);
+				
+				fileVo.setFile_name(filePath);
+				fileVo.setFile_realname(realFilename);
+				fileVo.setBoard_seq(cnt);
+				boardService.insertFile(fileVo);
+			}
+			
+//			logger.debug("filePath : {}",filePath);
+//			logger.debug("fileName : {}",fileName);
+//			logger.debug("realFilename : {}",realFilename);
+			
+		}
 		
 		if(cnt > 0) {
 			String redirectUrl = request.getContextPath() + "/boardList?boardmenu_seq="+boardmenu_seq;

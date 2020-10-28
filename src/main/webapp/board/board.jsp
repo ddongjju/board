@@ -21,7 +21,19 @@ $(document).ready(function(){
 	$('#boardBtn').on('click',function(){
 		document.location="${cp}/boardDownInsert?board_seq=${boardVo.board_seq}&boardmenu_seq=${boardVo.boardmenu_seq }";
 	});
-	
+
+
+	//서류사항 textarea 체크
+	$('.DOC_TEXT').keyup(function (e){
+	    var content = $(this).val();
+	    $('#counter').html("("+content.length+" / 최대 500자)");    //글자수 실시간 카운팅
+
+	    if (content.length > 500){
+	        alert("최대 500자까지 입력 가능합니다.");
+	        $(this).val(content.substring(0, 500));
+	        $('#counter').html("(500 / 최대 500자)");
+	    }
+	});
 
 
 	
@@ -29,6 +41,11 @@ $(document).ready(function(){
 
 
 </script>
+<style type="text/css">
+	#hh{
+		float: left;
+	}
+</style>
 
 </head>
 
@@ -87,47 +104,97 @@ $(document).ready(function(){
 							</label>
 						</div>
 					</div>
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-							<button id="modBtn" type="submit" class="btn btn-default" >게시글 수정</button>
-						</div>
-					</div>
 					
+					
+					<c:if test="${S_MEMBER.user_id==boardVo.user_id}">
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<button id="modBtn" type="submit" class="btn btn-default" >게시글 수정</button>
+							</div>
+						</div>
+					</c:if>
 				</form>
-				<form action="${cp}/boardDelete" method="post">
-					<input type="hidden" name="board_seq" value="${boardVo.board_seq }">
-					<input type="hidden" name="boardmenu_seq" value="${boardVo.boardmenu_seq }">
-					<button id="delBtn" type="submit" class="btn btn-default" >게시글 삭제</button>
-				</form>
+				
+				
 				<hr>
-				<div class="form-group">
+				<c:if test="${S_MEMBER.user_id==boardVo.user_id}">
+					<form action="${cp}/boardDelete" method="post">
+						<input type="hidden" name="board_seq" value="${boardVo.board_seq }">
+						<input type="hidden" name="boardmenu_seq" value="${boardVo.boardmenu_seq }">
+						<button id="delBtn" type="submit" class="btn btn-default" >게시글 삭제</button>
+					</form>
+					<hr>
+				</c:if>
+				
+				<button id="boardBtn" type="submit" class="btn btn-default" >답글 작성</button>
+
+
+				<hr>
+				<div>
+					<div class="form-group">
 						<label for="pass" class="col-sm-2 control-label">다운로드 </label>
 						<div class="col-sm-10">
-						<c:forEach items="${fileList}" var="file">
-							<form action="${cp}/fileDownload" method="post">
-								<input type="hidden" data-board_seq="${file.file_seq }">
-								<button id="profileDownBtn" type="submit" class="btn btn-default" > ${file.file_realname }</button>
-								<input type="hidden" name="file_seq" value="${file.file_seq }">
-							</form>
-						</c:forEach>
-							
+							<c:forEach items="${fileList}" var="file">
+								<form action="${cp}/fileDownload" method="post">
+									<input type="hidden" data-board_seq="${file.file_seq }">
+									<input type="hidden" name="file_seq" value="${file.file_seq }">
+									<button id="profileDownBtn" type="submit"
+										class="btn btn-default">${file.file_realname }</button>
+								</form>
+							</c:forEach>
+
 						</div>
 					</div>
-					<br><br><hr>
+				</div>
+
+				<hr id="hh"><br>
 				
-					<button id="boardBtn" type="submit" class="btn btn-default" >답글 작성</button>
-					<br><br>
-					<hr>
-				
-				<form class="form-horizontal" role="form" action="${cp}/replyInsert" method="post">
-	               <div class="form-group">
-	                  <label for="file" class="col-sm-2 control-label"></label>
-	                  <div class="col-sm-10">
-							<textarea name="reply_content" rows="5" cols="70" placeholder="댓글을 입력하세요"></textarea>
-							<button id="replyBtn" type="submit" class="btn btn-default" >댓글 작성</button>
-	                  </div>
-	               </div>
-               </form>
+	               <c:forEach items="${replyList }" var="reply">
+	               		<form action="${cp}/deleteReply" method="post">
+		               		<div class="form-group">
+								<div class="col-sm-10">
+								<label for="reply" class="col-sm-2 control-label">댓글</label>
+								<c:choose>
+									<c:when test="${reply.reply_status=='Y'}">
+										<label class="control-label">${reply.reply_seq}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/</label>
+										<label class="control-label">&nbsp;&nbsp;&nbsp;&nbsp;${reply.reply_content }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/</label>
+										<label class="control-label">&nbsp;&nbsp;&nbsp;&nbsp;${reply.user_id}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+									<c:if test="${S_MEMBER.user_id==reply.user_id}">
+										<input type="submit" value="댓글삭제">
+	             					</c:if>
+				                  		<input type="hidden" name="reply_seq" value="${reply.reply_seq}">
+				                  		<input type="hidden" name="board_seq" value="${reply.board_seq}">
+				                  		<input type="hidden" name="reply_status" value="${reply.reply_status}">
+										<hr>
+									</c:when>
+									<c:when test="${reply.reply_status=='N'}">
+										<label class="control-label">삭제된 댓글입니다.</label>
+										<hr>
+									</c:when>
+								</c:choose>
+								</div>
+							</div>	
+						</form>
+	               </c:forEach>
+					
+					<form class="form-horizontal" role="form" action="${cp}/replyInsert" method="post">
+		               <div class="form-group">
+		                  <label for="file" class="col-sm-2 control-label"></label>
+		                  <div class="col-sm-10">
+		                  	<input type="hidden" name="board_seq" value="${boardVo.board_seq }">
+		                  	<input type="hidden" name="user_id" value="${S_MEMBER.user_id }">
+								<textarea class="DOC_TEXT" name="reply_content" rows="5" cols="70" placeholder="댓글을 입력하세요"></textarea>
+								<span style="color:#aaa;" id="counter">(0 / 최대 500자)</span>
+								<button id="replyBtn" type="submit" class="btn btn-default" >댓글 작성</button>
+		                  </div>
+		               </div>
+	               </form>
+	               
+
+
+
+
+	               
 				
 			</div>
 		</div>

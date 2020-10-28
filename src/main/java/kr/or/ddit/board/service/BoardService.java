@@ -100,6 +100,11 @@ public class BoardService implements BoardServiceI{
 	public int deleteBoard(int board_seq) {
 		return boardDao.deleteBoard(board_seq);
 	}
+
+	@Override
+	public int deleteFile(int file_seq) {
+		return boardDao.deleteFile(file_seq);
+	}
 	
 	
 

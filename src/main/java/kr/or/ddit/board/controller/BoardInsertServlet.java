@@ -95,17 +95,14 @@ public class BoardInsertServlet extends HttpServlet {
 //			logger.debug("fileName : {}",fileName);
 //			logger.debug("realFilename : {}",realFilename);
 			
-			
 		}
 		
 		if(cnt > 0) {
 			String redirectUrl = request.getContextPath() + "/boardList?boardmenu_seq="+boardmenu_seq;
 			response.sendRedirect(redirectUrl);
-			
 		}else {
 			doGet(request, response);
 		}
-		
 
 	}
 

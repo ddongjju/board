@@ -65,10 +65,38 @@ $(document).ready(function(){
                
                <textarea id="summernote" name="board_content"></textarea>
                
+              <div class="form-group">
+                  <label for="file" class="col-sm-2 control-label">첨부파일</label>
+                  <div class="col-sm-10">
+                     <input type="file" name="file_realname1"/>
+               		</div>
+                 </div>
+                 
                <div class="form-group">
                   <label for="file" class="col-sm-2 control-label">첨부파일</label>
                   <div class="col-sm-10">
-                     <input type="file" name="file_realname"/>
+                     <input type="file" name="file_realname2"/>
+               		</div>
+                 </div>
+               
+               <div class="form-group">
+                  <label for="file" class="col-sm-2 control-label">첨부파일</label>
+                  <div class="col-sm-10">
+                     <input type="file" name="file_realname3"/>
+               		</div>
+                 </div>
+               
+               <div class="form-group">
+                  <label for="file" class="col-sm-2 control-label">첨부파일</label>
+                  <div class="col-sm-10">
+                     <input type="file" name="file_realname4"/>
+               		</div>
+                 </div>
+               
+               <div class="form-group">
+                  <label for="file" class="col-sm-2 control-label">첨부파일</label>
+                  <div class="col-sm-10">
+                     <input type="file" name="file_realname5"/>
                		</div>
                  </div>
                

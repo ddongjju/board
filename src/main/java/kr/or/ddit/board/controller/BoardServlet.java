@@ -13,6 +13,9 @@ import kr.or.ddit.board.model.BoardVo;
 import kr.or.ddit.board.service.BoardService;
 import kr.or.ddit.board.service.BoardServiceI;
 import kr.or.ddit.file.model.FileVo;
+import kr.or.ddit.reply.model.ReplyVo;
+import kr.or.ddit.reply.service.ReplyService;
+import kr.or.ddit.reply.service.ReplyServiceI;
 
 /**
  * Servlet implementation class BoardServlet
@@ -21,10 +24,12 @@ import kr.or.ddit.file.model.FileVo;
 public class BoardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private BoardServiceI boardService;
+	private ReplyServiceI replyService;
 	
 	@Override
 	public void init() throws ServletException {
 		boardService = new BoardService();
+		replyService = new ReplyService();
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -40,6 +45,8 @@ public class BoardServlet extends HttpServlet {
 		List<FileVo> fileList = boardService.showFile(board_seq);
 		request.setAttribute("fileList", fileList);
 		
+		List<ReplyVo> replyList = replyService.ReplyList(board_seq);
+		request.setAttribute("replyList", replyList);
 
 		request.getRequestDispatcher("/board/board.jsp").forward(request, response);
 
